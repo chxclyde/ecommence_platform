@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+set -x
+
+usage() {
+  echo "Usage: $0 (create|destroy|reset|dump)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+# Parse argument.  $1 is the first argument
+case $1 in
+"create")
+  mkdir -p var
+  sqlite3 var/webapp.sqlite3 <sql/schema.sql
+  sqlite3 var/webapp.sqlite3 <sql/data.sql
+  ;;
+
+"destroy")
+  rm -rf var/webapp.sqlite3
+  ;;
+
+"reset")
+  rm -rf var/webapp.sqlite3 var/uploads
+  sqlite3 var/webapp.sqlite3 <sql/schema.sql
+  sqlite3 var/webapp.sqlite3 <sql/data.sql
+  ;;
+
+"dump")
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM items'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM catalog_items'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM users'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM carts'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM cart_items'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM orders'
+    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM order_items'
+  ;;
+*)
+  usage
+  exit 1
+  ;;
+esac
