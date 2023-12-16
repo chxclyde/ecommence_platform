@@ -2,7 +2,7 @@
 ## GET /api/items
 
 Description: Retrieves a list of all items in the catalog. \
-Response: An array of items, each with a unique ID, name, description, and price.\
+Response: An array of items, each with a unique ID, name, description, and price, quantity.
 ## POST /api/items (Admin only)
 
 Description: Adds a new item to the catalog. \
