@@ -110,7 +110,7 @@ function CartPage() {
                 return response.json();
             })
             .then(data => {
-                // Handle the confirmation data, e.g., display order ID
+                
                 console.log('Order ID:', data.order_id);
                 setCartItems([]);
                 setPayment("");

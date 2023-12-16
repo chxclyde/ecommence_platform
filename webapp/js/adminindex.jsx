@@ -7,7 +7,7 @@ export default function AdminIndexPage() {
 
     useEffect(() => {
         // Make an API request to fetch catalog items
-        fetch('/api/items') // Update with your API endpoint
+        fetch('/api/items')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
