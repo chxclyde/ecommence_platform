@@ -32,7 +32,6 @@ case $1 in
 
 "dump")
     sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM items'
-    sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM catalog_items'
     sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM users'
     sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM carts'
     sqlite3 -batch -line var/webapp.sqlite3 'SELECT * FROM cart_items'

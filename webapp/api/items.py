@@ -1,6 +1,6 @@
 import flask
 import webapp
-from flask import jsonify
+from flask import jsonify,request
 
 # Endpoint to retrieve all items
 @webapp.app.route('/api/items/', methods=['GET'])
@@ -32,7 +32,8 @@ def get_items():
 
     return jsonify(item_list)
 
-# Endpoint to add a new item (admin-only)
+
+#endpoint for adding a new item
 @webapp.app.route('/api/items/', methods=['POST'])
 def add_item():
     """
@@ -46,38 +47,31 @@ def add_item():
 
     # Get item data from the request body
     data = request.get_json()
-    new_item = {
-        "id": len(catalog) + 1,
-        "name": data["name"],
-        "description": data["description"],
-        "price": data["price"]
-    }
-    catalog.append(new_item)
-    return jsonify(new_item), 201
 
-# Endpoint to update an existing item (admin-only)
-@webapp.app.route('/api/items/<int:item_id>/', methods=['PUT'])
-def update_item(item_id):
-    """
-    Description: Updates the details of an existing item (Admin only).
-    Request Body: Contains the updated name, description, and/or price.
-    Response: Details of the updated item.
-    """
-    # Check if the user is an admin (you need to implement authentication)
-    if not user_is_admin():
-        return "Permission denied", 403
+    # Insert the new item into the database
+    try:
+        db = webapp.model.get_db()
+        cursor = db.cursor()
+        cursor.execute(
+            "INSERT INTO items (name, description, price) VALUES (?, ?, ?)",
+            (data["name"], data["description"], data["price"])
+        )
+        item_id = cursor.lastrowid
+        cursor.close()
 
-    # Find the item with the specified item_id
-    item = next((item for item in catalog if item["id"] == item_id), None)
-    if item is None:
-        return "Item not found", 404
+        # Format the added item data
+        new_item = {
+            "id": item_id,
+            "name": data["name"],
+            "description": data["description"],
+            "price": data["price"],
+        }
 
-    # Update item details from the request body
-    data = request.get_json()
-    item["name"] = data.get("name", item["name"])
-    item["description"] = data.get("description", item["description"])
-    item["price"] = data.get("price", item["price"])
-    return jsonify(item)
+        return jsonify(new_item), 201  # Respond with the added item data and 201 status code
+
+    except Exception as e:
+        print("Error adding item:", str(e))
+        return "Failed to add item", 500
 
 # Endpoint to delete an item (admin-only)
 @webapp.app.route('/api/items/<int:item_id>/', methods=['DELETE'])
@@ -90,15 +84,39 @@ def delete_item(item_id):
     if not user_is_admin():
         return "Permission denied", 403
 
-    # Find and remove the item with the specified item_id
-    item = next((item for item in catalog if item["id"] == item_id), None)
-    if item is None:
-        return "Item not found", 404
+    # Delete the item from the database
+    try:
+        db = webapp.model.get_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM items WHERE id=?", (item_id,))
+        db.commit()
+        cursor.close()
 
-    catalog.remove(item)
-    return "Item deleted", 204
+        return "Item deleted", 204  # Respond with a confirmation message and 204 status code
 
-# Function to check if a user is an admin (you need to implement this)
+    except Exception as e:
+        print("Error deleting item:", str(e))
+        return "Failed to delete item", 500
+
+
+# Endpoint to update an existing item (admin-only)
+@webapp.app.route('/api/items/<int:item_id>/', methods=['PUT'])
+def update_item(item_id):
+    """
+    Description: Updates the details of an existing item (Admin only).
+    Request Body: Contains the updated name, description, and/or price.
+    Response: Details of the updated item.
+    """
+    # Check if the user is an admin (you need to implement authentication)
+    if not user_is_admin():
+        return "Permission denied", 403
+    # to be done.
+
+    return
+
+
+
+# Function to check if a user is an admin
 def user_is_admin():
 
     return True  # For testing purposes, assume the user is an admin

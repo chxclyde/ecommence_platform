@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 export default function AdminIndexPage() {
     const [items, setItems] = useState([]);
-    const [newItem, setNewItem] = useState({ name: '', description: '', price: 0 });
+    const [newItem, setNewItem] = useState({ name: '', description: '', price: '' });
 
     useEffect(() => {
         // Make an API request to fetch catalog items
@@ -82,11 +82,12 @@ export default function AdminIndexPage() {
                     onChange={e => setNewItem({ ...newItem, description: e.target.value })}
                 />
                 <input
-                    type="number"
-                    placeholder="Price"
+                    type="text"
+                    placeholder="price"
                     value={newItem.price}
                     onChange={e => setNewItem({ ...newItem, price: e.target.value })}
                 />
+                
                 <button onClick={handleAddItem}>Add Item</button>
             </div>
             <h2>Item Catalog</h2>
