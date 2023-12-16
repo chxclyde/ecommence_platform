@@ -2,6 +2,7 @@ import flask
 import webapp
 from flask import jsonify, request
 
+
 def fetch_cart_contents(user_id):
     try:
         db = webapp.model.get_db()
@@ -43,9 +44,6 @@ def get_cart():
     # Get the user's cart items from the database
     cart_data = fetch_cart_contents(1)
     return jsonify(cart_data)
-
-    
-
 
 
 # Define the route to add an item to the shopping cart
@@ -152,3 +150,65 @@ def remove_from_cart():
         print("Error removing item from cart:", str(e))
         return "Failed to remove item from cart", 500
 
+
+@webapp.app.route('/api/checkout', methods=['POST'])
+def process_checkout():
+    """
+    Description: Processes the checkout with the items in the cart.
+    Request Body: User information and shipping address.
+    Response: Confirmation of the order with an order ID.
+    """
+
+    # Get user information and shipping address from the request body
+    data = request.get_json()
+    user_info = data.get("user")
+    shipping_address = data.get("shipping_address")
+    payment = data.get("payment")
+    cart_id = 1
+
+    db = webapp.model.get_db()
+
+    cursor = db.execute("""
+        SELECT SUM(items.price * cart_items.quantity) as total_price
+        FROM cart_items
+        JOIN items ON cart_items.item_id = items.id
+        WHERE cart_items.cart_id = 1
+    """)
+    result = cursor.fetchone()
+    total_price = result["total_price"]
+
+    # Insert the order into the orders table
+    cursor = db.execute(
+        """
+        INSERT INTO orders (user_id, total_price, shipping_address, payment_method)
+        VALUES (?, ?, ?, ?)
+        """,
+        (1, total_price, shipping_address, payment)
+    )
+    order_id = cursor.lastrowid
+
+    # Transfer items from the cart to order_items
+    db.execute(
+        """
+        INSERT INTO order_items (order_id, item_id, quantity)
+        SELECT ?, item_id, quantity
+        FROM cart_items
+        WHERE cart_id = 1
+        """,
+        (order_id,)
+    )
+    db.commit()
+
+    # Clear the user's cart after successful checkout (assuming cart_id is 1)
+    db = webapp.model.get_db()
+    db.execute(
+        """
+        DELETE FROM cart_items
+        WHERE cart_id = 1
+        """
+    )
+    db.commit()
+
+    # Return the order confirmation with the order ID
+    response_data = {"order_id": 1}
+    return jsonify(response_data), 201

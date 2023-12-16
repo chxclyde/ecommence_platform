@@ -1,8 +1,10 @@
 import flask
 import webapp
-from flask import jsonify,request
+from flask import jsonify, request
 
 # Endpoint to retrieve all items
+
+
 @webapp.app.route('/api/items/', methods=['GET'])
 def get_items():
     """
@@ -20,7 +22,6 @@ def get_items():
     # Define a list to store the item data
     item_list = []
 
-    # Format the item data as specified in the response
     for item in items:
         item_data = {
             "id": item["id"],
@@ -33,7 +34,7 @@ def get_items():
     return jsonify(item_list)
 
 
-#endpoint for adding a new item
+# endpoint for adding a new item
 @webapp.app.route('/api/items/', methods=['POST'])
 def add_item():
     """
@@ -41,7 +42,7 @@ def add_item():
     Request Body: Contains the name, description, and price of the item.
     Response: Details of the added item.
     """
-    # Check if the user is an admin (you need to implement authentication)
+    # Check if the user is an admin
     if not user_is_admin():
         return "Permission denied", 403
 
@@ -67,20 +68,23 @@ def add_item():
             "price": data["price"],
         }
 
-        return jsonify(new_item), 201  # Respond with the added item data and 201 status code
+        # Respond with the added item data and 201 status code
+        return jsonify(new_item), 201
 
     except Exception as e:
         print("Error adding item:", str(e))
         return "Failed to add item", 500
 
 # Endpoint to delete an item (admin-only)
+
+
 @webapp.app.route('/api/items/<int:item_id>/', methods=['DELETE'])
 def delete_item(item_id):
     """
     Description: Removes an item from the catalog (Admin only).
     Response: A confirmation message indicating successful removal.
     """
-    # Check if the user is an admin (you need to implement authentication)
+    # Check if the user is an admin
     if not user_is_admin():
         return "Permission denied", 403
 
@@ -107,13 +111,12 @@ def update_item(item_id):
     Request Body: Contains the updated name, description, and/or price.
     Response: Details of the updated item.
     """
-    # Check if the user is an admin (you need to implement authentication)
+    # Check if the user is an admin
     if not user_is_admin():
         return "Permission denied", 403
     # to be done.
 
     return
-
 
 
 # Function to check if a user is an admin

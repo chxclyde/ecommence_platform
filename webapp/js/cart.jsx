@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 function CartPage() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
+    const [shippingAddress, setShippingAddress] = useState("");
+    const [payment, setPayment] = useState("");
     useEffect(() => {
         // Make an API request to fetch cart items
         fetch('/api/cart')
@@ -98,7 +99,8 @@ function CartPage() {
                     name: 'default',
                     email: 'default@example.com',
                 },
-                shipping_address: '123 Shipping St, City, Country',
+                shipping_address: shippingAddress,
+                payment: payment,
             }),
         })
             .then(response => {
@@ -110,7 +112,11 @@ function CartPage() {
             .then(data => {
                 // Handle the confirmation data, e.g., display order ID
                 console.log('Order ID:', data.order_id);
-                history.push('/');
+                setCartItems([]);
+                setPayment("");
+                setShippingAddress("");
+                setTotalPrice(0);
+
             })
             .catch(error => {
                 console.error('Error processing checkout:', error);
@@ -133,7 +139,23 @@ function CartPage() {
                 ))}
             </ul>
             <p>Total Price: ${totalPrice}</p>
-            <button onClick={handleCheckout}>Checkout</button>
+            <div>
+                <h2>Check out info:</h2>
+                <input
+                    type="text"
+                    placeholder="Payment"
+                    value={payment}
+                    onChange={e => setPayment( e.target.value )}
+                />
+                <input
+                    type="text"
+                    placeholder="Shipping Address"
+                    value={shippingAddress}
+                    onChange={e => setShippingAddress( e.target.value )}
+                />
+                <button onClick={handleCheckout}>Checkout</button>
+            </div>
+            
         </div>
     );
 }

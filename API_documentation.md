@@ -35,5 +35,5 @@ Response: Updated contents of the shopping cart.
 # 3. Checkout Endpoint
 ## POST /api/checkout
 Description: Processes the checkout with the items in the cart. \
-Request Body: User information and shipping address.\
+Request Body: User information, payment method and shipping address.\
 Response: Confirmation of the order with an order ID.
