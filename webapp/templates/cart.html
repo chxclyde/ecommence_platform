@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ecommence</title>
+        <style>
+            .post{
+                width: fit-content;
+                border: 1px solid black;
+                margin: 20px;
+                clear: both;
+                
+            }
+            .total{
+                margin: auto;
+                width: fit-content;
+                clear: both;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <div>
+            <h2 style="float: left;"><a href="/">homepage</a> | ecommence</h2>
+            <h2 style="float: right;"><a href="/cart/">cart</a> </h2>
+        </div>
+        <br>
+        <div id="reactEntry" data-page="cart">
+        <h1>Loading ...</h1>
+        </div>
+        <!-- Load JavaScript -->
+        <div>
+            <script 
+                type="text/javascript" 
+                src="{{ url_for('static', filename='js/bundle.js') }}">
+            </script>    
+        </div>
+    
+    </body>
+</html>

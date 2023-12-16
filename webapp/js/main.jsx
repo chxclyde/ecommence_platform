@@ -1,13 +1,29 @@
-import React, { StrictMode } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import Post from "./post";
-
+import UserIndexPage from "./userindex";
+import AdminIndexPage from "./adminindex";
+import CartPage from "./cart";
 // Create a root
-const root = createRoot(document.getElementById("reactEntry"));
-
-// This method is only called once
-// Insert the post component into the DOM
-root.render(
-    <Post url="/api/v1/posts/1/" />
+const determineCurrentPage = () => {
+    const pageId = document.getElementById('reactEntry').getAttribute('data-page');
+    return pageId;
+  };
+const App = () => {
+    
+    const currentPage = determineCurrentPage();
   
-);
+    return (
+      <div>
+        {currentPage === 'user' && <UserIndexPage />}
+            {currentPage === 'admin' && <AdminIndexPage />}
+            {currentPage === 'cart' && <CartPage/> }
+      </div>
+    );
+};
+  
+
+  
+
+
+const root = createRoot(document.getElementById('reactEntry'));
+root.render(<App />);

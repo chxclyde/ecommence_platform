@@ -5,13 +5,6 @@ CREATE TABLE items (
     description TEXT,
     price REAL NOT NULL
 );
-CREATE TABLE catalog_items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    item_id INTEGER NOT NULL,
-    quantity INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY (item_id) REFERENCES items(id)
-);
-
 
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

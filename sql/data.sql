@@ -19,16 +19,3 @@ VALUES
 ('Item Eight', 'Description for item eight', 89.99),
 ('Item Nine', 'Description for item nine', 99.99),
 ('Item Ten', 'Description for item ten', 109.99);
-
-INSERT INTO catalog_items (item_id, quantity)
-VALUES 
-(1, 50), -- Item One
-(2, 30), -- Item Two
-(3, 20), -- Item Three
-(4, 50), -- Item Four
-(5, 30), -- Item Five
-(6, 20), -- Item Six
-(7, 50), -- Item Seven
-(8, 30), -- Item Eight
-(9, 20), -- Item Nine
-(10, 50); -- Item Ten

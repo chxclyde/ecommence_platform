@@ -11,9 +11,8 @@ def get_items():
     """
     db = webapp.model.get_db()
     cursor = db.execute("""
-        SELECT items.id, items.name, items.description, items.price, catalog_items.quantity
+        SELECT items.id, items.name, items.description, items.price
         FROM items
-        LEFT JOIN catalog_items ON items.id = catalog_items.item_id
     """)
 
     items = cursor.fetchall()
@@ -28,7 +27,6 @@ def get_items():
             "name": item["name"],
             "description": item["description"],
             "price": item["price"],
-            "quantity": item["quantity"]
         }
         item_list.append(item_data)
 
