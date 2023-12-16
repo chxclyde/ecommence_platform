@@ -28,7 +28,7 @@ function UserIndexPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ item_id: itemId, quantity: 1 }), // You can adjust quantity as needed
+        body: JSON.stringify({ item_id: itemId, quantity: 1 }),
       })
         .then(response => {
           if (!response.ok) {
@@ -50,7 +50,7 @@ function UserIndexPage() {
               <h2>{item.name}</h2>
               <p>{item.description}</p>
               <p>Price: ${item.price}</p>
-              <button onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+              <button onClick={() => handleAddToCart(item.id)}>Add one to Cart</button>
             </li>
           ))}
         </ul>
